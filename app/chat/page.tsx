@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, Suspense } from 'react'
 import { personas, type PersonaId } from '@/lib/personas'
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
 interface Message {
@@ -18,7 +18,7 @@ interface Conversation {
   updated_at: string
 }
 
-export default function ChatPage() {
+function ChatPageInner() {
   const [selectedPersona, setSelectedPersona] = useState<PersonaId>('ray')
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
@@ -29,8 +29,10 @@ export default function ChatPage() {
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null)
   const [showHistory, setShowHistory] = useState(false)
   const [lockedModal, setLockedModal] = useState<{ name: string; emoji: string; description: string; tagline: string } | null>(null)
+  const [upgradeSuccess, setUpgradeSuccess] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+  const searchParams = useSearchParams()
   const supabase = createClient()
 
   useEffect(() => {
@@ -48,7 +50,23 @@ export default function ChatPage() {
 
       if (!profile?.onboarding_completed) { router.push('/onboarding'); return }
 
-      const paid = profile?.plan === 'pro'
+      // If returning from Stripe, poll until plan updates (webhook may take a few seconds)
+      let planStatus = profile?.plan
+      if (searchParams.get('upgrade') === 'success' && planStatus !== 'pro') {
+        for (let i = 0; i < 5; i++) {
+          await new Promise(r => setTimeout(r, 2000))
+          const { data: refreshed } = await supabase
+            .from('profiles')
+            .select('plan')
+            .eq('id', user.id)
+            .single()
+          if (refreshed?.plan === 'pro') { planStatus = 'pro'; break }
+        }
+        setUpgradeSuccess(true)
+        router.replace('/chat') // remove ?upgrade=success from URL
+      }
+
+      const paid = planStatus === 'pro'
       setIsPaid(paid)
 
       // Load conversation history for paid users
@@ -331,6 +349,14 @@ export default function ChatPage() {
 
       {/* Main chat area */}
       <div className="flex-1 flex flex-col">
+        {/* Upgrade success banner */}
+        {upgradeSuccess && (
+          <div className="bg-orange-500 text-white text-center text-sm py-2 px-4 flex items-center justify-center gap-2">
+            🎉 Welcome to Pro! All coaches and memory are now unlocked.
+            <button onClick={() => setUpgradeSuccess(false)} className="ml-2 text-orange-200 hover:text-white">✕</button>
+          </div>
+        )}
+
         {/* Header */}
         <div className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -409,6 +435,7 @@ export default function ChatPage() {
       </div>
 
       {/* Locked coach modal */}
+
       {lockedModal && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4" onClick={() => setLockedModal(null)}>
           <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl" onClick={e => e.stopPropagation()}>
@@ -440,5 +467,13 @@ export default function ChatPage() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function ChatPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="text-gray-400">Loading...</div></div>}>
+      <ChatPageInner />
+    </Suspense>
   )
 }
