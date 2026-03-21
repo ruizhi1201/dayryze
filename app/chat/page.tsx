@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { personas, type PersonaId } from '@/lib/personas'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -145,12 +146,17 @@ export default function ChatPage() {
         {/* User info */}
         <div className="p-4 border-t border-gray-100">
           <p className="text-xs text-gray-400 truncate mb-2">{userEmail}</p>
-          <button
-            onClick={handleSignOut}
-            className="text-xs text-gray-400 hover:text-gray-600 transition"
-          >
-            Sign out
-          </button>
+          <div className="flex gap-3">
+            <Link href="/dashboard" className="text-xs text-orange-500 hover:text-orange-600 transition font-medium">
+              Account
+            </Link>
+            <button
+              onClick={handleSignOut}
+              className="text-xs text-gray-400 hover:text-gray-600 transition"
+            >
+              Sign out
+            </button>
+          </div>
         </div>
       </div>
 
