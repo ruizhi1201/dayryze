@@ -124,50 +124,22 @@ export default function OnboardingPage() {
         onboarding_completed: true,
       }
 
-      // Step 1: Save profile data (best effort)
-      await supabase
+      // Upsert — works whether or not the profile row exists
+      const { error: saveError } = await supabase
         .from('profiles')
-        .update({
+        .upsert({
+          id: user.id,
+          email: user.email,
           help_type: payload.help_type,
           current_job: payload.current_job,
           work_values: payload.work_values,
           life_goals: payload.life_goals,
-        })
-        .eq('id', user.id)
+          onboarding_completed: true,
+        }, { onConflict: 'id' })
 
-      // Step 2: Mark onboarding complete — separate call, must succeed
-      const { error: flagError, count } = await supabase
-        .from('profiles')
-        .update({ onboarding_completed: true })
-        .eq('id', user.id)
-
-      if (flagError) {
-        alert(`Save error: ${flagError.message}`)
+      if (saveError) {
+        alert(`Save error: ${saveError.message}`)
         return
-      }
-
-      // Verify the row was actually updated (count = 0 means RLS blocked it)
-      const { data: verify } = await supabase
-        .from('profiles')
-        .select('id, onboarding_completed')
-        .eq('id', user.id)
-        .single()
-
-      if (!verify) {
-        alert(`Cannot read profile. User ID: ${user.id}. Please check Supabase RLS policies.`)
-        return
-      }
-
-      if (!verify.onboarding_completed) {
-        // Force upsert as last resort
-        const { error: upsertError } = await supabase
-          .from('profiles')
-          .upsert({ id: user.id, onboarding_completed: true })
-
-        if (upsertError) {
-          alert(`Upsert failed: ${upsertError.message}. User ID: ${user.id}`)
-          return
-        }
       }
 
       router.push('/chat')
