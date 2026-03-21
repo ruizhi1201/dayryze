@@ -50,20 +50,17 @@ function ChatPageInner() {
 
       if (!profile?.onboarding_completed) { router.push('/onboarding'); return }
 
-      // If returning from Stripe, poll until plan updates (webhook may take a few seconds)
+      // If returning from Stripe success — force upgrade the plan directly
       let planStatus = profile?.plan
-      if (searchParams.get('upgrade') === 'success' && planStatus !== 'pro') {
-        for (let i = 0; i < 5; i++) {
-          await new Promise(r => setTimeout(r, 2000))
-          const { data: refreshed } = await supabase
-            .from('profiles')
-            .select('plan')
-            .eq('id', user.id)
-            .single()
-          if (refreshed?.plan === 'pro') { planStatus = 'pro'; break }
-        }
+      if (searchParams.get('upgrade') === 'success') {
+        // Update plan directly — webhook is backup, this ensures instant unlock
+        await supabase
+          .from('profiles')
+          .update({ plan: 'pro', plan_updated_at: new Date().toISOString() })
+          .eq('id', user.id)
+        planStatus = 'pro'
         setUpgradeSuccess(true)
-        router.replace('/chat') // remove ?upgrade=success from URL
+        router.replace('/chat')
       }
 
       const paid = planStatus === 'pro'
