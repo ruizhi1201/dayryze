@@ -26,12 +26,12 @@ export async function POST(request: Request) {
     const userId = session.metadata?.userId
     const plan = session.metadata?.plan
 
-    if (userId && plan) {
+    if (userId) {
       await supabase
         .from('profiles')
         .upsert({
           id: userId,
-          plan,
+          plan: 'pro',
           stripe_customer_id: session.customer as string,
           stripe_subscription_id: session.subscription as string,
           plan_updated_at: new Date().toISOString(),

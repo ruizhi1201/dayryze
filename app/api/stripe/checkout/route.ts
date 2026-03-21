@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   }
 
   const { plan } = await request.json()
-  const planData = plan === 'pro' ? PLANS.pro : PLANS.growth
+  const planData = PLANS.pro // Only one paid plan
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
