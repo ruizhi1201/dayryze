@@ -119,7 +119,7 @@ export default function OnboardingPage() {
       const payload = {
         help_type: answers['help_type'] as string,
         current_job: answers['current_job'] as string,
-        values: Array.isArray(valuesArr) ? valuesArr.join(', ') : valuesArr,
+        work_values: Array.isArray(valuesArr) ? valuesArr.join(', ') : valuesArr,
         life_goals: answers['life_goals'] as string,
         onboarding_completed: true,
       }

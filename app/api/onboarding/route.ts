@@ -16,15 +16,12 @@ export async function POST(request: Request) {
     current_job,
     years_experience,
     top_skills,
-    values,
+    work_values,
     risk_tolerance,
     life_goals,
     onboarding_completed,
   } = body
 
-  // Always save onboarding data — free and paid users
-  // For free users, this data is used in the current session
-  // For paid users, this persists and is loaded every session
   const { error } = await supabase
     .from('profiles')
     .update({
@@ -32,7 +29,7 @@ export async function POST(request: Request) {
       current_job,
       years_experience,
       top_skills,
-      values,
+      work_values,
       risk_tolerance,
       life_goals,
       onboarding_completed,

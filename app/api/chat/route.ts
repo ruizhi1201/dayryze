@@ -18,7 +18,7 @@ export async function POST(request: Request) {
   // Load user profile
   const { data: profile } = await supabase
     .from('profiles')
-    .select('plan, conversations_this_week, week_reset_at, trial_ends_at, onboarding_completed, current_job, years_experience, top_skills, values, risk_tolerance, life_goals, help_type')
+    .select('plan, conversations_this_week, week_reset_at, trial_ends_at, onboarding_completed, current_job, years_experience, top_skills, work_values, risk_tolerance, life_goals, help_type')
     .eq('id', user.id)
     .single()
 
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
 - **Current role:** ${profile.current_job || 'not specified'}
 - **Years of experience:** ${profile.years_experience || 'not specified'}
 - **Top skills & strengths:** ${profile.top_skills || 'not specified'}
-- **What they value most in work:** ${profile.values || 'not specified'}
+- **What they value most in work:** ${profile.work_values || 'not specified'}
 - **Risk tolerance:** ${riskLabels[profile.risk_tolerance] || profile.risk_tolerance || 'not specified'}
 - **Their ideal life / 3-year vision:** ${profile.life_goals || 'not specified'}
 
