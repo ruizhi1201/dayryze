@@ -96,13 +96,12 @@ Use this context naturally throughout the conversation. Don't robotically recite
       temperature: 0.8,
     })
 
-    // Increment conversation count
+    // Update usage count and last_conversation_at
+    const updates: Record<string, unknown> = { last_conversation_at: new Date().toISOString() }
     if (!isPaid && !isOnTrial) {
-      await supabase
-        .from('profiles')
-        .update({ conversations_this_week: (profile?.conversations_this_week || 0) + 1 })
-        .eq('id', user.id)
+      updates.conversations_this_week = (profile?.conversations_this_week || 0) + 1
     }
+    await supabase.from('profiles').update(updates).eq('id', user.id)
 
     const encoder = new TextEncoder()
     const readable = new ReadableStream({
