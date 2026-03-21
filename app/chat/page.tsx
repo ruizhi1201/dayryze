@@ -180,7 +180,7 @@ export default function ChatPage() {
         {/* Logo */}
         <div className="p-5 border-b border-gray-100">
           <h1 className="text-xl font-bold text-orange-500">🌅 Dayryz</h1>
-          <p className="text-xs text-gray-400 mt-1">Your career coach</p>
+          <p className="text-xs text-gray-400 mt-1">Every Dayryz is a new beginning.</p>
         </div>
 
         {/* Persona selector */}

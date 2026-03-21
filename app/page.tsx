@@ -192,7 +192,7 @@ export default function HomePage() {
 
       {/* CTA */}
       <section className="bg-orange-500 py-24 px-6 text-center">
-        <h2 className="text-4xl font-extrabold text-white mb-4">Your next chapter starts today.</h2>
+        <h2 className="text-4xl font-extrabold text-white mb-4">Every Dayryz is a new beginning.</h2>
         <p className="text-orange-100 text-lg mb-10 max-w-lg mx-auto">
           Thousands of people are stuck in the wrong career. You don&apos;t have to be one of them.
         </p>

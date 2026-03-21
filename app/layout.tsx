@@ -13,11 +13,11 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Dayryz — AI Career Coach for Career Changers',
+  title: 'Dayryz — Every Dayryz is a new beginning.',
   description: 'Dayryz is your AI-powered career transformation coach. Find a new career, discover your startup idea, or redesign your life. Start free — no credit card required.',
   keywords: 'career change, career coach, AI career advisor, career transition, find new career, startup ideas, career pivot',
   openGraph: {
-    title: 'Dayryz — AI Career Coach for Career Changers',
+    title: 'Dayryz — Every Dayryz is a new beginning.',
     description: 'Stuck in the wrong career? Dayryz helps you find what\'s next. AI-powered coaching available 24/7.',
     url: 'https://dayryz.com',
     siteName: 'Dayryz',
