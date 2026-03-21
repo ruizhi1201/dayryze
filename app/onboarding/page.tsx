@@ -109,13 +109,12 @@ export default function OnboardingPage() {
       return
     }
 
-    // Last step — save and go to chat
+    // Last step — save directly via client Supabase (most reliable)
     setLoading(true)
     try {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
 
-      // Format values array as string
       const valuesArr = answers['values'] as string[]
       const payload = {
         help_type: answers['help_type'] as string,
@@ -125,29 +124,33 @@ export default function OnboardingPage() {
         onboarding_completed: true,
       }
 
-      const res = await fetch('/api/onboarding', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
+      // Save directly via client — bypass API route to avoid SSR session issues
+      const { error } = await supabase
+        .from('profiles')
+        .update(payload)
+        .eq('id', user.id)
 
-      if (res.status === 401) {
-        // Not authenticated — go to login
-        router.push('/login')
+      if (error) {
+        console.error('Save error:', error)
+        // Column might not exist yet — still redirect but flag it
+        alert('Could not save your profile. Please make sure the database migration has been run in Supabase.')
         return
       }
 
-      if (res.ok) {
+      // Verify it actually saved before redirecting
+      const { data: check } = await supabase
+        .from('profiles')
+        .select('onboarding_completed')
+        .eq('id', user.id)
+        .single()
+
+      if (check?.onboarding_completed) {
         router.push('/chat')
       } else {
-        // Save failed but user is auth'd — try direct Supabase update as fallback
-        await supabase
-          .from('profiles')
-          .update(payload)
-          .eq('id', user.id)
-        router.push('/chat')
+        alert('Profile save failed. Please run the Supabase migration (add_onboarding.sql) and try again.')
       }
-    } catch {
+    } catch (err) {
+      console.error(err)
       router.push('/login')
     } finally {
       setLoading(false)
