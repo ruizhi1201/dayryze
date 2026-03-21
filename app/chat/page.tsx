@@ -56,6 +56,9 @@ export default function ChatPage() {
         const data = await res.json()
         setConversations(data.conversations || [])
       }
+
+      // Trigger greeting on first load
+      await sendGreeting('ray', paid)
     }
     init()
   }, [])
@@ -65,6 +68,54 @@ export default function ChatPage() {
   }, [messages])
 
   const currentPersona = personas.find(p => p.id === selectedPersona)!
+
+  const sendGreeting = async (personaId: PersonaId, paid: boolean) => {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/chat/greeting', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ personaId }),
+      })
+      if (!res.ok) return
+
+      const reader = res.body!.getReader()
+      const decoder = new TextDecoder()
+      let text = ''
+
+      setMessages([{ role: 'assistant', content: '' }])
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        text += decoder.decode(value)
+        setMessages([{ role: 'assistant', content: text }])
+      }
+
+      // Save greeting to DB for paid users
+      if (paid && text) {
+        const convRes = await fetch('/api/conversations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ persona_id: personaId, title: 'New conversation' }),
+        })
+        const convData = await convRes.json()
+        if (convData.conversation?.id) {
+          setActiveConversationId(convData.conversation.id)
+          await fetch(`/api/conversations/${convData.conversation.id}/messages`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messages: [{ role: 'assistant', content: text }] }),
+          })
+          const updatedConvs = await fetch('/api/conversations')
+          setConversations((await updatedConvs.json()).conversations || [])
+        }
+      }
+    } catch (err) {
+      console.error('Greeting error:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const loadConversation = async (conv: Conversation) => {
     setActiveConversationId(conv.id)
@@ -192,7 +243,7 @@ export default function ChatPage() {
               return (
                 <button
                   key={persona.id}
-                  onClick={() => { if (!locked) { setSelectedPersona(persona.id); startNewChat() } }}
+                  onClick={() => { if (!locked) { setSelectedPersona(persona.id); startNewChat(); sendGreeting(persona.id, isPaid) } }}
                   className={`w-full text-left p-3 rounded-xl transition ${
                     selectedPersona === persona.id ? 'bg-orange-50 border border-orange-200' :
                     locked ? 'opacity-40 cursor-not-allowed border border-transparent' :
