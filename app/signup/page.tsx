@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -11,8 +11,13 @@ export default function SignupPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const router = useRouter()
   const supabase = createClient()
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -63,7 +68,9 @@ export default function SignupPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              autoComplete="email"
+              autoComplete="off"
+              readOnly={!mounted}
+              onFocus={(e) => e.target.removeAttribute('readonly')}
               className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
               placeholder="you@example.com"
             />
@@ -78,6 +85,8 @@ export default function SignupPage() {
               required
               minLength={6}
               autoComplete="new-password"
+              readOnly={!mounted}
+              onFocus={(e) => e.target.removeAttribute('readonly')}
               className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
               placeholder="At least 6 characters"
             />
