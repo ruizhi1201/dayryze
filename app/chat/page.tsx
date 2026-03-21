@@ -108,7 +108,7 @@ export default function ChatPage() {
       <div className="w-64 bg-white border-r border-gray-100 flex flex-col">
         {/* Logo */}
         <div className="p-5 border-b border-gray-100">
-          <h1 className="text-xl font-bold text-orange-500">🌅 Dayryze</h1>
+          <h1 className="text-xl font-bold text-orange-500">🌅 Dayryz</h1>
           <p className="text-xs text-gray-400 mt-1">Your career coach</p>
         </div>
 

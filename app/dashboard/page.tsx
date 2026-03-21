@@ -78,7 +78,7 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between">
-        <Link href="/chat" className="text-xl font-bold text-orange-500">🌅 Dayryze</Link>
+        <Link href="/chat" className="text-xl font-bold text-orange-500">🌅 Dayryz</Link>
         <div className="flex items-center gap-4">
           <Link href="/chat" className="text-sm text-orange-500 font-medium hover:text-orange-600">
             → Go to chat
@@ -104,8 +104,7 @@ export default function DashboardPage() {
               <p className={`text-xs font-semibold uppercase tracking-wider ${isPaid ? 'text-orange-100' : 'text-gray-400'}`}>Current plan</p>
               <h2 className={`text-2xl font-bold mt-1 capitalize ${isPaid ? 'text-white' : 'text-gray-800'}`}>
                 {profile?.plan || 'Free'}
-                {profile?.plan === 'growth' && ' — $19/mo'}
-                {profile?.plan === 'pro' && ' — $49/mo'}
+                {profile?.plan === 'pro' && ' — $19/mo'}
               </h2>
             </div>
             {!isPaid && (
@@ -135,16 +134,10 @@ export default function DashboardPage() {
 
               <div className="flex gap-3">
                 <button
-                  onClick={() => handleUpgrade('growth')}
+                  onClick={() => handleUpgrade('pro')}
                   className="flex-1 bg-orange-500 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-orange-600 transition"
                 >
-                  Upgrade to Growth — $19/mo
-                </button>
-                <button
-                  onClick={() => handleUpgrade('pro')}
-                  className="flex-1 bg-gray-800 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-900 transition"
-                >
-                  Go Pro — $49/mo
+                  Upgrade to Pro — $19/mo
                 </button>
               </div>
             </>
@@ -215,7 +208,7 @@ export default function DashboardPage() {
             onClick={handleSignOut}
             className="text-sm text-gray-400 hover:text-gray-600"
           >
-            Sign out of Dayryze
+            Sign out of Dayryz
           </button>
         </div>
 

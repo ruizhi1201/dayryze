@@ -38,7 +38,7 @@ const faqs = [
   },
   {
     q: 'How is this different from ChatGPT?',
-    a: 'Dayryze is purpose-built for career transitions. Our coaches have deep, specialized prompting for career change, startup ideation, and life redesign — not generic answers.',
+    a: 'Dayryz is purpose-built for career transitions. Our coaches have deep, specialized prompting for career change, startup ideation, and life redesign — not generic answers.',
   },
   {
     q: 'What if I refer a friend?',
@@ -50,7 +50,7 @@ const faqs = [
   },
   {
     q: "I'm not sure what I want — is that okay?",
-    a: "That's exactly who Dayryze is for. Start a conversation with Ray and let him help you figure it out. You don't need to have it figured out first.",
+    a: "That's exactly who Dayryz is for. Start a conversation with Ray and let him help you figure it out. You don't need to have it figured out first.",
   },
 ]
 
@@ -60,7 +60,7 @@ export default function HomePage() {
 
       {/* Nav */}
       <nav className="px-8 py-5 flex justify-between items-center border-b border-gray-50 sticky top-0 bg-white/90 backdrop-blur z-10">
-        <div className="text-xl font-bold text-orange-500">🌅 Dayryze</div>
+        <div className="text-xl font-bold text-orange-500">🌅 Dayryz</div>
         <div className="flex items-center gap-6">
           <Link href="/pricing" className="text-sm text-gray-500 hover:text-gray-700">Pricing</Link>
           <Link href="/login" className="text-sm text-gray-500 hover:text-gray-700">Sign in</Link>
@@ -80,7 +80,7 @@ export default function HomePage() {
           <span className="text-orange-500">Let&apos;s change that.</span>
         </h1>
         <p className="text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
-          Dayryze is your AI career coach — available 24/7, brutally honest, and actually helpful. Find a new career, discover your startup idea, or just figure out what you actually want.
+          Dayryz is your AI career coach — available 24/7, brutally honest, and actually helpful. Find a new career, discover your startup idea, or just figure out what you actually want.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/signup" className="bg-orange-500 text-white px-8 py-4 rounded-2xl text-lg font-bold hover:bg-orange-600 transition shadow-lg shadow-orange-100">
@@ -98,7 +98,7 @@ export default function HomePage() {
         <p className="text-gray-500 text-sm">
           <strong className="text-gray-700">59% of professionals</strong> want a career change — most just don&apos;t know where to start.
           <span className="mx-3 text-gray-300">|</span>
-          <strong className="text-gray-700">Dayryze</strong> helps you figure it out.
+          <strong className="text-gray-700">Dayryz</strong> helps you figure it out.
         </p>
       </section>
 
@@ -166,11 +166,7 @@ export default function HomePage() {
             <p className="text-3xl font-extrabold text-white">$19<span className="text-lg font-normal text-orange-100">/mo</span></p>
             <p className="text-sm text-orange-100 mt-1">Growth plan</p>
           </div>
-          <div className="text-gray-300 text-2xl hidden sm:block">·</div>
-          <div className="bg-gray-800 rounded-2xl px-8 py-5 text-center">
-            <p className="text-3xl font-extrabold text-white">$49<span className="text-lg font-normal text-gray-400">/mo</span></p>
-            <p className="text-sm text-gray-400 mt-1">Pro plan</p>
-          </div>
+
         </div>
         <div className="mt-8">
           <Link href="/pricing" className="text-orange-500 font-medium hover:underline text-sm">
@@ -208,13 +204,13 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="px-8 py-8 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-400">
-        <div className="font-bold text-orange-500">🌅 Dayryze</div>
+        <div className="font-bold text-orange-500">🌅 Dayryz</div>
         <div className="flex gap-6">
           <Link href="/pricing" className="hover:text-gray-600">Pricing</Link>
           <Link href="/login" className="hover:text-gray-600">Sign in</Link>
           <Link href="/signup" className="hover:text-gray-600">Sign up</Link>
         </div>
-        <p>© 2026 Dayryze by Snapinno LLC</p>
+        <p>© 2026 Dayryz by Snapinno LLC</p>
       </footer>
 
     </div>

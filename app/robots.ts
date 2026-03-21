@@ -3,6 +3,6 @@ import { MetadataRoute } from 'next'
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: { userAgent: '*', allow: '/', disallow: ['/api/', '/dashboard/', '/chat/'] },
-    sitemap: 'https://dayryze.com/sitemap.xml',
+    sitemap: 'https://dayryz.com/sitemap.xml',
   }
 }

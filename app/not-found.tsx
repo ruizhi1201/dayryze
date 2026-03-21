@@ -11,7 +11,7 @@ export default function NotFound() {
           href="/"
           className="bg-orange-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-orange-600 transition"
         >
-          Back to Dayryze
+          Back to Dayryz
         </Link>
       </div>
     </div>

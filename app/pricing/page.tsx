@@ -11,8 +11,8 @@ const plans = [
     price: 0,
     description: 'Get started and explore',
     features: [
-      '10 conversations per week',
-      'Chat with Ray (life coach)',
+      '5 sessions per month',
+      'Structured onboarding — AI knows you from day one',
       'Career change guidance',
       'Basic action plans',
     ],
@@ -20,34 +20,20 @@ const plans = [
     highlight: false,
   },
   {
-    id: 'growth',
-    name: 'Growth',
+    id: 'pro',
+    name: 'Pro',
     price: 19,
     description: 'For serious career changers',
     features: [
-      'Unlimited conversations',
+      'Unlimited sessions',
+      'Persistent memory — AI remembers you across sessions',
       'All 4 AI coaches (Ray, Sage, Nova, Ace)',
       'Career change + startup + life redesign',
-      'Detailed action plans',
+      'Weekly accountability check-ins',
       'Conversation history',
     ],
-    cta: 'Start Growth plan',
-    highlight: true,
-  },
-  {
-    id: 'pro',
-    name: 'Pro',
-    price: 49,
-    description: 'For full career transformation',
-    features: [
-      'Everything in Growth',
-      '90-day structured program',
-      'Weekly progress check-ins',
-      'Priority new features',
-      'Export your career roadmap',
-    ],
     cta: 'Start Pro plan',
-    highlight: false,
+    highlight: true,
   },
 ]
 
@@ -87,7 +73,7 @@ export default function PricingPage() {
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
       {/* Nav */}
       <nav className="px-8 py-5 flex justify-between items-center">
-        <Link href="/" className="text-xl font-bold text-orange-500">🌅 Dayryze</Link>
+        <Link href="/" className="text-xl font-bold text-orange-500">🌅 Dayryz</Link>
         <div className="flex gap-4 text-sm">
           <Link href="/login" className="text-gray-500 hover:text-gray-700">Sign in</Link>
           <Link href="/signup" className="bg-orange-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-orange-600">Get started</Link>
@@ -101,7 +87,7 @@ export default function PricingPage() {
       </div>
 
       {/* Plans */}
-      <div className="max-w-5xl mx-auto px-6 pb-20 grid md:grid-cols-3 gap-6">
+      <div className="max-w-3xl mx-auto px-6 pb-20 grid md:grid-cols-2 gap-6">
         {plans.map(plan => (
           <div
             key={plan.id}
