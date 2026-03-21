@@ -136,18 +136,40 @@ export default function OnboardingPage() {
         .eq('id', user.id)
 
       // Step 2: Mark onboarding complete — separate call, must succeed
-      const { error: flagError } = await supabase
+      const { error: flagError, count } = await supabase
         .from('profiles')
         .update({ onboarding_completed: true })
         .eq('id', user.id)
 
       if (flagError) {
-        console.error('Flag error:', flagError)
         alert(`Save error: ${flagError.message}`)
         return
       }
 
-      // Go to chat — trust the flag update worked
+      // Verify the row was actually updated (count = 0 means RLS blocked it)
+      const { data: verify } = await supabase
+        .from('profiles')
+        .select('id, onboarding_completed')
+        .eq('id', user.id)
+        .single()
+
+      if (!verify) {
+        alert(`Cannot read profile. User ID: ${user.id}. Please check Supabase RLS policies.`)
+        return
+      }
+
+      if (!verify.onboarding_completed) {
+        // Force upsert as last resort
+        const { error: upsertError } = await supabase
+          .from('profiles')
+          .upsert({ id: user.id, onboarding_completed: true })
+
+        if (upsertError) {
+          alert(`Upsert failed: ${upsertError.message}. User ID: ${user.id}`)
+          return
+        }
+      }
+
       router.push('/chat')
     } catch (err) {
       console.error(err)
