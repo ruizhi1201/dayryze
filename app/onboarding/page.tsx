@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
@@ -83,8 +83,30 @@ export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(0)
   const [answers, setAnswers] = useState<Record<string, string | string[]>>({})
   const [loading, setLoading] = useState(false)
+  const [authChecked, setAuthChecked] = useState(false)
   const router = useRouter()
   const supabase = createClient()
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { router.push('/login'); return }
+
+      // If already completed onboarding, go straight to chat
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('onboarding_completed')
+        .eq('id', user.id)
+        .single()
+
+      if (profile?.onboarding_completed) {
+        router.push('/chat')
+        return
+      }
+      setAuthChecked(true)
+    }
+    checkAuth()
+  }, [])
 
   const step = steps[currentStep]
   const isLast = currentStep === steps.length - 1
@@ -144,17 +166,35 @@ export default function OnboardingPage() {
         body: JSON.stringify(payload),
       })
 
+      if (res.status === 401) {
+        // Not authenticated — go to login
+        router.push('/login')
+        return
+      }
+
       if (res.ok) {
         router.push('/chat')
       } else {
-        // Even if save fails, still go to chat
+        // Save failed but user is auth'd — try direct Supabase update as fallback
+        await supabase
+          .from('profiles')
+          .update({ onboarding_completed: true, ...payload })
+          .eq('id', user.id)
         router.push('/chat')
       }
     } catch {
-      router.push('/chat')
+      router.push('/login')
     } finally {
       setLoading(false)
     }
+  }
+
+  if (!authChecked) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 flex items-center justify-center">
+        <div className="text-gray-400 text-sm">Loading...</div>
+      </div>
+    )
   }
 
   return (
