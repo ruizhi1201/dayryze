@@ -124,31 +124,31 @@ export default function OnboardingPage() {
         onboarding_completed: true,
       }
 
-      // Save directly via client — bypass API route to avoid SSR session issues
-      const { error } = await supabase
+      // Step 1: Save profile data (best effort)
+      await supabase
         .from('profiles')
-        .update(payload)
+        .update({
+          help_type: payload.help_type,
+          current_job: payload.current_job,
+          work_values: payload.work_values,
+          life_goals: payload.life_goals,
+        })
         .eq('id', user.id)
 
-      if (error) {
-        console.error('Save error:', error)
-        // Column might not exist yet — still redirect but flag it
-        alert('Could not save your profile. Please make sure the database migration has been run in Supabase.')
+      // Step 2: Mark onboarding complete — separate call, must succeed
+      const { error: flagError } = await supabase
+        .from('profiles')
+        .update({ onboarding_completed: true })
+        .eq('id', user.id)
+
+      if (flagError) {
+        console.error('Flag error:', flagError)
+        alert(`Save error: ${flagError.message}`)
         return
       }
 
-      // Verify it actually saved before redirecting
-      const { data: check } = await supabase
-        .from('profiles')
-        .select('onboarding_completed')
-        .eq('id', user.id)
-        .single()
-
-      if (check?.onboarding_completed) {
-        router.push('/chat')
-      } else {
-        alert('Profile save failed. Please run the Supabase migration (add_onboarding.sql) and try again.')
-      }
+      // Go to chat — trust the flag update worked
+      router.push('/chat')
     } catch (err) {
       console.error(err)
       router.push('/login')
