@@ -69,10 +69,10 @@ export default function DashboardPage() {
     )
   }
 
-  const isPaid = profile?.plan === 'growth' || profile?.plan === 'pro'
-  const weeklyLimit = 10
+  const isPaid = profile?.plan === 'pro'
+  const monthlyLimit = 5
   const used = profile?.conversations_this_week || 0
-  const remaining = Math.max(0, weeklyLimit - used)
+  const remaining = Math.max(0, monthlyLimit - used)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -120,16 +120,16 @@ export default function DashboardPage() {
               {/* Usage bar */}
               <div className="mb-4">
                 <div className="flex justify-between text-xs text-gray-500 mb-1">
-                  <span>Conversations this week</span>
-                  <span>{used} / {weeklyLimit}</span>
+                  <span>Sessions this month</span>
+                  <span>{used} / {monthlyLimit}</span>
                 </div>
                 <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-orange-400 rounded-full transition-all"
-                    style={{ width: `${Math.min(100, (used / weeklyLimit) * 100)}%` }}
+                    style={{ width: `${Math.min(100, (used / monthlyLimit) * 100)}%` }}
                   />
                 </div>
-                <p className="text-xs text-gray-400 mt-1">{remaining} conversations remaining this week</p>
+                <p className="text-xs text-gray-400 mt-1">{remaining} sessions remaining this month</p>
               </div>
 
               <div className="flex gap-3">

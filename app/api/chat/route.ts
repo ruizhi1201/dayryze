@@ -25,22 +25,22 @@ export async function POST(request: Request) {
   const isPaid = profile?.plan === 'pro'
   const isOnTrial = profile?.trial_ends_at && new Date(profile.trial_ends_at) > new Date()
 
-  // Check weekly limit for free users
+  // Check monthly limit for free users (5 sessions/month)
   if (!isPaid && !isOnTrial) {
-    const weeklyLimit = 10
+    const monthlyLimit = 5
     const now = new Date()
     const weekReset = profile?.week_reset_at ? new Date(profile.week_reset_at) : new Date(0)
     const daysSinceReset = (now.getTime() - weekReset.getTime()) / (1000 * 60 * 60 * 24)
 
-    // Reset weekly count if 7 days have passed
-    if (daysSinceReset >= 7) {
+    // Reset monthly count if 30 days have passed
+    if (daysSinceReset >= 30) {
       await supabase
         .from('profiles')
         .update({ conversations_this_week: 0, week_reset_at: now.toISOString() })
         .eq('id', user.id)
-    } else if ((profile?.conversations_this_week || 0) >= weeklyLimit) {
+    } else if ((profile?.conversations_this_week || 0) >= monthlyLimit) {
       return NextResponse.json({
-        error: 'Weekly limit reached',
+        error: 'Monthly limit reached',
         limitReached: true,
         upgradeUrl: '/pricing',
       }, { status: 429 })

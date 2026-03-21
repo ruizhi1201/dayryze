@@ -34,11 +34,11 @@ const coaches = [
 const faqs = [
   {
     q: 'Is it really free to start?',
-    a: 'Yes — no credit card required. You get 10 conversations per week with Ray, our life coach AI, completely free.',
+    a: 'Yes — no credit card required. You get 5 sessions per month with Ray, our life coach AI, completely free.',
   },
   {
     q: 'How is this different from ChatGPT?',
-    a: 'Dayryz is purpose-built for career transitions. Our coaches have deep, specialized prompting for career change, startup ideation, and life redesign — not generic answers.',
+    a: 'Dayryz knows you. You complete a quick profile and your coach uses it from message one. Pro users get persistent memory — your coach remembers every conversation and holds you accountable. ChatGPT starts from zero every time.',
   },
   {
     q: 'What if I refer a friend?',
@@ -90,7 +90,7 @@ export default function HomePage() {
             See pricing
           </Link>
         </div>
-        <p className="text-sm text-gray-400 mt-4">No credit card required · 10 free conversations/week</p>
+        <p className="text-sm text-gray-400 mt-4">No credit card required · 5 free sessions/month</p>
       </section>
 
       {/* Social proof bar */}
@@ -110,8 +110,8 @@ export default function HomePage() {
         </div>
         <div className="grid md:grid-cols-3 gap-10">
           {[
-            { step: '01', title: 'Pick your coach', desc: 'Choose the AI coach that fits your mood — warm & supportive, analytical, entrepreneurial, or straight-talking.' },
-            { step: '02', title: 'Have a real conversation', desc: 'No forms. No quizzes. Just talk. Your coach asks the right questions and actually listens.' },
+            { step: '01', title: 'Tell us about yourself', desc: 'A quick 4-question onboarding so your coach knows who you are from the very first message. No generic advice.' },
+            { step: '02', title: 'Your coach speaks first', desc: 'Based on your profile, your AI coach opens with a personalized insight — and one focused question to get you moving.' },
             { step: '03', title: 'Walk away with a plan', desc: 'Every conversation ends with concrete next steps — not vague advice, but real things you can do this week.' },
           ].map(item => (
             <div key={item.step} className="text-center">
@@ -164,7 +164,7 @@ export default function HomePage() {
           <div className="text-gray-300 text-2xl hidden sm:block">·</div>
           <div className="bg-orange-500 rounded-2xl px-8 py-5 text-center shadow-lg shadow-orange-100">
             <p className="text-3xl font-extrabold text-white">$19<span className="text-lg font-normal text-orange-100">/mo</span></p>
-            <p className="text-sm text-orange-100 mt-1">Growth plan</p>
+            <p className="text-sm text-orange-100 mt-1">Pro plan</p>
           </div>
 
         </div>
