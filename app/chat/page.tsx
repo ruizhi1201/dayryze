@@ -26,8 +26,19 @@ export default function ChatPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) {
         router.push('/login')
-      } else {
-        setUserEmail(user.email || '')
+        return
+      }
+      setUserEmail(user.email || '')
+
+      // Check if onboarding is done — redirect if not
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('onboarding_completed')
+        .eq('id', user.id)
+        .single()
+
+      if (!profile?.onboarding_completed) {
+        router.push('/onboarding')
       }
     }
     getUser()
