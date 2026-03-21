@@ -28,6 +28,7 @@ export default function ChatPage() {
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null)
   const [showHistory, setShowHistory] = useState(false)
+  const [lockedModal, setLockedModal] = useState<{ name: string; emoji: string; description: string; tagline: string } | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const supabase = createClient()
@@ -243,10 +244,18 @@ export default function ChatPage() {
               return (
                 <button
                   key={persona.id}
-                  onClick={() => { if (!locked) { setSelectedPersona(persona.id); startNewChat(); sendGreeting(persona.id, isPaid) } }}
+                  onClick={() => {
+                    if (locked) {
+                      setLockedModal({ name: persona.name, emoji: persona.emoji, description: persona.description, tagline: persona.tagline })
+                    } else {
+                      setSelectedPersona(persona.id)
+                      startNewChat()
+                      sendGreeting(persona.id, isPaid)
+                    }
+                  }}
                   className={`w-full text-left p-3 rounded-xl transition ${
                     selectedPersona === persona.id ? 'bg-orange-50 border border-orange-200' :
-                    locked ? 'opacity-40 cursor-not-allowed border border-transparent' :
+                    locked ? 'opacity-60 cursor-pointer hover:bg-gray-50 border border-transparent' :
                     'hover:bg-gray-50 border border-transparent'
                   }`}
                 >
@@ -398,6 +407,38 @@ export default function ChatPage() {
           <p className="text-xs text-gray-300 text-center mt-2">Press Enter to send · Shift+Enter for new line</p>
         </div>
       </div>
+
+      {/* Locked coach modal */}
+      {lockedModal && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4" onClick={() => setLockedModal(null)}>
+          <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="text-center mb-6">
+              <div className="text-6xl mb-3">{lockedModal.emoji}</div>
+              <h2 className="text-2xl font-bold text-gray-800">{lockedModal.name}</h2>
+              <p className="text-sm text-gray-400 mt-1">{lockedModal.tagline}</p>
+            </div>
+            <p className="text-gray-600 text-sm text-center leading-relaxed mb-6">
+              {lockedModal.description}
+            </p>
+            <div className="bg-orange-50 rounded-2xl p-4 mb-6 text-center">
+              <p className="text-sm text-orange-700 font-medium">🔒 Available on Pro plan</p>
+              <p className="text-xs text-orange-500 mt-1">Unlock {lockedModal.name} + memory + unlimited sessions</p>
+            </div>
+            <Link
+              href="/pricing"
+              className="block w-full bg-orange-500 hover:bg-orange-600 text-white text-center py-3 rounded-2xl font-semibold text-sm transition"
+            >
+              Upgrade to Pro — $19/mo →
+            </Link>
+            <button
+              onClick={() => setLockedModal(null)}
+              className="block w-full text-center text-gray-400 text-sm mt-3 hover:text-gray-600"
+            >
+              Maybe later
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
