@@ -143,7 +143,7 @@ export default function OnboardingPage() {
         // Save failed but user is auth'd — try direct Supabase update as fallback
         await supabase
           .from('profiles')
-          .update({ onboarding_completed: true, ...payload })
+          .update(payload)
           .eq('id', user.id)
         router.push('/chat')
       }
