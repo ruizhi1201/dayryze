@@ -54,7 +54,9 @@ export async function POST(request: Request) {
   const dailyResetAt = profile?.daily_messages_reset_at ? new Date(profile.daily_messages_reset_at) : new Date(0)
   const hoursSinceReset = (now.getTime() - dailyResetAt.getTime()) / (1000 * 60 * 60)
   const dailyMessages = hoursSinceReset >= 24 ? 0 : (profile?.daily_messages || 0)
-  const dailyLimit = isPaid ? 50 : 100
+  // gpt-4o (paid): ~$0.015/msg × 100 = ~$1.50/day max — generous for paying users
+  // gpt-4o-mini (free): ~$0.0003/msg × 20 = ~$0.006/day — free users already capped at 5 sessions/month anyway
+  const dailyLimit = isPaid ? 100 : 20
 
   if (dailyMessages >= dailyLimit) {
     return NextResponse.json({
