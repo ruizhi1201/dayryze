@@ -60,7 +60,7 @@ export default function HomePage() {
 
       {/* Nav */}
       <nav className="px-8 py-5 flex justify-between items-center border-b border-gray-50 sticky top-0 bg-white/90 backdrop-blur z-10">
-        <div className="text-xl font-bold text-orange-500">🌅 Dayryz</div>
+        <img src="/logo.png" alt="Dayryz" className="h-8 w-auto" />
         <div className="flex items-center gap-6">
           <Link href="/pricing" className="text-sm text-gray-500 hover:text-gray-700">Pricing</Link>
           <Link href="/login" className="text-sm text-gray-500 hover:text-gray-700">Sign in</Link>
@@ -204,7 +204,7 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="px-8 py-8 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-400">
-        <div className="font-bold text-orange-500">🌅 Dayryz</div>
+        <img src="/logo.png" alt="Dayryz" className="h-7 w-auto" />
         <div className="flex gap-6">
           <Link href="/pricing" className="hover:text-gray-600">Pricing</Link>
           <Link href="/login" className="hover:text-gray-600">Sign in</Link>

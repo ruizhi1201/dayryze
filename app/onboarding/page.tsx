@@ -163,7 +163,7 @@ export default function OnboardingPage() {
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 flex flex-col">
       {/* Header */}
       <div className="px-6 py-5 flex items-center justify-between">
-        <div className="text-xl font-bold text-orange-500">🌅 Dayryz</div>
+        <img src="/logo.png" alt="Dayryz" className="h-8 w-auto" />
         <div className="text-sm text-gray-400">{currentStep + 1} of {steps.length}</div>
       </div>
 

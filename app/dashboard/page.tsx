@@ -78,7 +78,7 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between">
-        <Link href="/chat" className="text-xl font-bold text-orange-500">🌅 Dayryz</Link>
+        <Link href="/chat"><img src="/logo.png" alt="Dayryz" className="h-8 w-auto" /></Link>
         <div className="flex items-center gap-4">
           <Link href="/chat" className="text-sm text-orange-500 font-medium hover:text-orange-600">
             → Go to chat

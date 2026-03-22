@@ -47,7 +47,7 @@ export default function ForgotPasswordPage() {
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-orange-500">Dayryz</h1>
+          <img src="/logo.png" alt="Dayryz" className="h-10 w-auto mx-auto" />
           <p className="text-gray-500 mt-2">Reset your password</p>
         </div>
 

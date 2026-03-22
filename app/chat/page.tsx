@@ -246,7 +246,7 @@ function ChatPageInner() {
       <div className="w-64 bg-white border-r border-gray-100 flex flex-col">
         {/* Logo */}
         <div className="p-5 border-b border-gray-100">
-          <h1 className="text-xl font-bold text-orange-500">🌅 Dayryz</h1>
+          <img src="/logo.png" alt="Dayryz" className="h-8 w-auto" />
           <p className="text-xs text-gray-400 mt-1">Every Dayryz is a new beginning.</p>
         </div>
 

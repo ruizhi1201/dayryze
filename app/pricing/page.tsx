@@ -73,7 +73,7 @@ export default function PricingPage() {
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
       {/* Nav */}
       <nav className="px-8 py-5 flex justify-between items-center">
-        <Link href="/" className="text-xl font-bold text-orange-500">🌅 Dayryz</Link>
+        <Link href="/"><img src="/logo.png" alt="Dayryz" className="h-8 w-auto" /></Link>
         <div className="flex gap-4 text-sm">
           <Link href="/login" className="text-gray-500 hover:text-gray-700">Sign in</Link>
           <Link href="/signup" className="bg-orange-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-orange-600">Get started</Link>
