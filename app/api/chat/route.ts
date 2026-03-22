@@ -18,7 +18,7 @@ export async function POST(request: Request) {
   // Load user profile
   const { data: profile } = await supabase
     .from('profiles')
-    .select('plan, conversations_this_week, week_reset_at, trial_ends_at, onboarding_completed, current_job, years_experience, top_skills, work_values, risk_tolerance, life_goals, help_type')
+    .select('plan, conversations_this_week, week_reset_at, trial_ends_at, onboarding_completed, current_job, years_experience, top_skills, work_values, risk_tolerance, life_goals, help_type, daily_messages, daily_messages_reset_at')
     .eq('id', user.id)
     .single()
 
@@ -45,6 +45,22 @@ export async function POST(request: Request) {
         upgradeUrl: '/pricing',
       }, { status: 429 })
     }
+  }
+
+  // ── Daily token cost cap (max $1/user/day) ──────────────────────────────────
+  // gpt-4o (paid): ~$0.015/msg → cap at 50 msgs/day
+  // gpt-4o-mini (free): ~$0.0003/msg → cap at 100 msgs/day
+  const now = new Date()
+  const dailyResetAt = profile?.daily_messages_reset_at ? new Date(profile.daily_messages_reset_at) : new Date(0)
+  const hoursSinceReset = (now.getTime() - dailyResetAt.getTime()) / (1000 * 60 * 60)
+  const dailyMessages = hoursSinceReset >= 24 ? 0 : (profile?.daily_messages || 0)
+  const dailyLimit = isPaid ? 50 : 100
+
+  if (dailyMessages >= dailyLimit) {
+    return NextResponse.json({
+      error: 'Daily message limit reached. Come back tomorrow — your coach will be here! 🌅',
+      dailyLimitReached: true,
+    }, { status: 429 })
   }
 
   const { messages, personaId } = await request.json()
@@ -97,7 +113,11 @@ Use this context naturally throughout the conversation. Don't robotically recite
     })
 
     // Update usage count and last_conversation_at
-    const updates: Record<string, unknown> = { last_conversation_at: new Date().toISOString() }
+    const updates: Record<string, unknown> = {
+      last_conversation_at: new Date().toISOString(),
+      daily_messages: dailyMessages + 1,
+      ...(hoursSinceReset >= 24 && { daily_messages_reset_at: new Date().toISOString() }),
+    }
     if (!isPaid && !isOnTrial) {
       updates.conversations_this_week = (profile?.conversations_this_week || 0) + 1
     }
