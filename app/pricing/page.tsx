@@ -49,10 +49,17 @@ export default function PricingPage() {
 
     setLoading(planId)
     try {
+      // Grab UTM data stored on landing for ad attribution
+      let utm = {}
+      try {
+        const stored = sessionStorage.getItem('dayryz_utm')
+        if (stored) utm = JSON.parse(stored)
+      } catch {}
+
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan: planId }),
+        body: JSON.stringify({ plan: planId, utm }),
       })
 
       if (res.status === 401) {

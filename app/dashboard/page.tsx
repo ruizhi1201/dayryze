@@ -43,10 +43,16 @@ export default function DashboardPage() {
   }
 
   const handleUpgrade = async (plan: string) => {
+    let utm = {}
+    try {
+      const stored = sessionStorage.getItem('dayryz_utm')
+      if (stored) utm = JSON.parse(stored)
+    } catch {}
+
     const res = await fetch('/api/stripe/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ plan }),
+      body: JSON.stringify({ plan, utm }),
     })
     const { url } = await res.json()
     if (url) window.location.href = url

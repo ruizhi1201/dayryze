@@ -10,8 +10,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { plan } = await request.json()
+  const { plan, utm } = await request.json()
   const planData = PLANS.pro // Only one paid plan
+
+  // Build metadata including UTM params for ad attribution
+  const metadata: Record<string, string> = {
+    userId: user.id,
+    plan,
+    ...(utm || {}),
+  }
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
@@ -23,10 +30,7 @@ export async function POST(request: Request) {
         quantity: 1,
       },
     ],
-    metadata: {
-      userId: user.id,
-      plan,
-    },
+    metadata,
     success_url: `${process.env.NEXT_PUBLIC_APP_URL}/chat?upgrade=success`,
     cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing`,
   })
